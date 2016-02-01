@@ -1,0 +1,16 @@
+---
+# defaults file for postgresql
+
+postgres_id_rsa: ~/.ssh/postgres_id_rsa
+postgres_id_rsa_pub: ~/.ssh/postgres_id_rsa.pub
+
+
+pg__listen_addresses: '*'  # default localhost
+pg__port: 5494  # default 5432
+pg__max_connections: 100 
+pg__home: /var/lib/postgresql
+pg__data: /var/lib/postgresql/9.4/main
+pg__config: /etc/postgresql/9.4/main
+
+pg__log_destination: syslog  # default stderr
+

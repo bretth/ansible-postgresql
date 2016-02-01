@@ -1,0 +1,44 @@
+---
+# tasks file for postgresql
+
+- name: Install postgresql
+  apt: name={{ item }} state=present
+  with_items:
+    - postgresql
+    - postgresql-contrib-9.4
+
+- name: tighten postgres home dir permissions
+  file: path={{ pg__home }}
+        state=directory
+        owner=postgres group=postgres mode=0700  # u=rwx
+
+- name: create the postgres .ssh directory
+  file: path={{ pg__home }}/.ssh
+        state=directory
+        owner=postgres group=postgres mode=0700  # u=rwx
+
+- name: copy the postgres private key
+  copy: src={{ postgres_id_rsa }}
+        dest={{ pg__home }}/.ssh/id_rsa
+        backup=false
+        owner=postgres group=postgres mode=0600  # u=rw
+
+- name: copy the postgres public key
+  authorized_key: 
+    user=postgres
+    key={{ postgres_id_rsa_pub }}
+    path={{ pg__home }}/.ssh/authorized_keys
+
+- name: copy the conf template
+  template: src=etc~postgresql~9.4~main~postgresql.conf.j2
+            dest={{ pg__config }}/postgresql.conf
+            owner=postgres group=postgres
+  notify: restart postgresql
+
+- name: copy pg_hba conf
+  copy: src=etc~postgresql~9.4~main~pg_hba.conf
+        dest={{ pg__config }}/pg_hba.conf
+        owner=postgres group=postgres mode=0644  # u=rw,g=r
+  notify: reload postgresql
+
+
