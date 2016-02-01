@@ -11,6 +11,7 @@ pg__max_connections: 100
 pg__home: /var/lib/postgresql
 pg__data: /var/lib/postgresql/9.4/main
 pg__config: /etc/postgresql/9.4/main
+pg__include_dir: conf.d
 
 pg__log_destination: syslog  # default stderr
 

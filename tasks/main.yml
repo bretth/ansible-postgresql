@@ -35,6 +35,14 @@
             owner=postgres group=postgres
   notify: restart postgresql
 
+  # for additional roles to place conf overrides the conf directory 
+  # is imported at the end of postgresql.conf
+- name: create a conf directory
+  file: path={{ pg__config }}/{{ pg__include_dir }}
+        state=directory
+        owner=postgres group=postgres
+
+
 - name: copy pg_hba conf
   copy: src=etc~postgresql~9.4~main~pg_hba.conf
         dest={{ pg__config }}/pg_hba.conf
